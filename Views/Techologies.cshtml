@@ -1,0 +1,186 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@using Umbraco.Cms.Core.Models
+@using Umbraco.Cms.Core.Models.Blocks
+@using Umbraco.Cms.Core.Models.PublishedContent
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+	Layout = "MasterLayout.cshtml";
+
+     //Banner
+        var pageTitle = Model.Value<string>("pageTitle");
+    var bannerImage = Model.Value<Umbraco.Cms.Core.Models.MediaWithCrops>("image");
+
+    //Hero Section
+        var heroHeading = Model.Value<string>("heroHeading");
+        var heroSubHeading = Model.Value<string>("heroSubHeading");
+
+    // Our Technology Philosophy (Section) 
+      var philosophyHeading = Model.Value<string>("philosophyHeading");
+      var philosophyDescription = Model.Value<string>("philosophyDescription");
+      var philosophyImage = Model.Value<Umbraco.Cms.Core.Models.MediaWithCrops>("philosophyImage");
+
+      // technologies Card Section
+    var solutionHeading = Model.Value<string>("solutionHeading");
+      var solutionSubHeading = Model.Value<string>("solutionSubHeading");
+      var technologiesCard = Model.Value<BlockListModel>("technologiesCard");
+
+
+       // Left-Right Card Section
+       var technologySideCardHeading = Model.Value<string>("technologySideCardHeading");
+      var technologySideCardSubHeading = Model.Value<string>("technologySideCardSubHeading");
+      var techcardDetails = Model.Value<BlockListModel>("cardDetails");
+}
+
+
+    <!-- Page Title -->
+    <div class="page-title dark-background" data-aos="fade"style="@(bannerImage != null 
+        ? $"background-image:url('{bannerImage.Url()}'); background-size:cover; background-position:center;" 
+        : "")">
+      <div class="container">
+        <h1>@pageTitle</h1>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="/">Home</a></li>
+            <li class="current">@pageTitle</li>
+          </ol>
+        </nav>
+      </div>
+    </div><!-- End Page Title -->
+
+    <!-- Services Section -->
+    <section id="technologies" class="technologies section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>@heroHeading</h2>
+        <p>@heroSubHeading </p>
+      </div><!-- End Section Title -->
+
+       <div class="container">
+        <div class="row gy-4" data-aos="fade-up" data-aos-delay="100">
+          <div class="col-lg-5">
+              @if(philosophyImage != null)
+              {
+            <img src="@philosophyImage.Url()" class="img-fluid" alt="">
+              }
+          </div>
+          <div class="col-lg-7" data-aos="fade-up" data-aos-delay="200">
+              
+            <div class="content">
+                <h3>@philosophyHeading</h3>
+              <p>
+                @Html.Raw(philosophyDescription.ToString().Replace("<p>", "").Replace("</p>", ""))  
+              </p>             
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section><!-- /Services Section -->
+
+      <!-- technologies Cards Section -->
+    <section id="service-cards" class="service-cards section">
+        <div class="container section-title aos-init aos-animate" data-aos="fade-up">
+        <h2>@solutionHeading</h2>
+        <p> @Html.Raw(solutionSubHeading.ToString().Replace("<p>", "").Replace("</p>", "")) </p>
+      </div>
+  <div class="container">
+    <div class="row gy-4">
+         @if ( technologiesCard != null && technologiesCard.Any())
+          {   
+           @foreach (var techcard in technologiesCard)
+           {
+                var content = techcard.Content;          
+                var heading2 = content.Value<string>("heading");
+                var description = content.Value<string>("description");
+                var image = content.Value<Umbraco.Cms.Core.Models.MediaWithCrops>("image");
+      <!-- CARD 1 -->
+      <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="card-item vertical-card">
+          <div class="card-bg">
+              @if(image != null)
+              {
+            <img src="@image.Url()" alt="">
+              }
+          </div>
+          <div class="card-body text-center">
+            <h4 class="card-title">@heading2</h4>
+            <p>
+              @Html.Raw(description.ToString().Replace("<p>", "").Replace("</p>", ""))   
+            </p>
+          </div>
+        </div>
+      </div>
+         }  
+      }     
+
+    </div>
+  </div>
+</section>   <!-- /technologies Cards Section -->
+  
+
+
+
+<!-- 4. 2x2 Grid Section -->
+<section id="career" class="career section">
+<div class="container section-title aos-init aos-animate" data-aos="fade-up">
+        <h2>@technologySideCardHeading</h2>
+        <p>@technologySideCardSubHeading</p>
+      </div>
+@{
+    int index = 0;
+}
+
+@if (techcardDetails != null && techcardDetails.Any())
+{
+    foreach (var card in techcardDetails)
+    {
+        var content = card.Content;
+        var heading = content.Value<string>("heading");
+        var description = content.Value<string>("description");
+        var image = content.Value<Umbraco.Cms.Core.Models.MediaWithCrops>("image");
+
+        bool isEven = index % 2 == 0;
+        <div class="career-grid-img bg-Who-we-are">
+            <div class="container">
+                <div class="row align-items-center">
+
+                    <!-- IMAGE -->
+                    <div class="col-md-6 p-0 @(isEven ? "" : "order-md-2")">
+                        <div class="career-card">
+                            @if (image != null)
+                            {
+                                <img src="@image.Url()" class="img-fluid" alt="@heading" />
+                            }
+                        </div>
+                    </div>
+
+                    <!-- CONTENT -->
+                    <div class="col-md-6 d-flex flex-column justify-content-center align-items-start @(isEven ? "" : "order-md-1")">
+                        <div class="career-card mb-5 pt-5 ps-lg-5">
+                            @if (!string.IsNullOrEmpty(heading))
+                            {
+                                <h3 class="career-title">@heading</h3>
+                            }
+
+                            @if (!string.IsNullOrEmpty(description))
+                            {
+                                @Html.Raw(description.Replace("<p>", "").Replace("</p>", ""))
+                            }
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+                index++;
+    }
+}
+
+</section>
+
+
+
+
+    <!-- CTA section -->
+ @await Html.GetBlockGridHtmlAsync(Model, "ctaWidget") 

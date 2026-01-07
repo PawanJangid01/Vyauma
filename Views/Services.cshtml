@@ -1,0 +1,175 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@using Umbraco.Cms.Core.Models
+@using Umbraco.Cms.Core.Models.Blocks
+@using Umbraco.Cms.Core.Models.PublishedContent
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+	Layout = "MasterLayout.cshtml";
+
+      //Banner
+        var pageTitle = Model.Value<string>("pageTitle");
+    var bannerImage = Model.Value<Umbraco.Cms.Core.Models.MediaWithCrops>("image");
+
+    //Hero Section
+        var heroHeading = Model.Value<string>("heroHeading");
+        var heroDescription = Model.Value<string>("heroDescription");
+    var heroImage = Model.Value<Umbraco.Cms.Core.Models.MediaWithCrops>("heroImage");
+
+    //Core Technology Capabilities Section
+      var heading = Model.Value<string>("heading");
+      var subHeading = Model.Value<string>("subHeading");
+      var serviceCard = Model.Value<BlockListModel>("serviceCard");
+
+    // Our Service Model Section
+    var serviceModelHeading = Model.Value<string>("serviceModelHeading");
+      var serviceModelSubHeading = Model.Value<string>("serviceModelSubHeading");
+      var modelCardDetails = Model.Value<BlockListModel>("modelCardDetails");
+
+     //Why Clients Choose Vyauma (Trust Section) 
+      var contentDetails = Model.Value<string>("contentDetails");
+      var sideImage = Model.Value<Umbraco.Cms.Core.Models.MediaWithCrops>("sideImage");
+}
+
+
+    <!-- Page Title -->
+    <div class="page-title dark-background" data-aos="fade" style="@(bannerImage != null 
+        ? $"background-image:url('{bannerImage.Url()}'); background-size:cover; background-position:center;" 
+        : "")">
+      <div class="container">
+        <h1>@pageTitle</h1>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="/">Home</a></li>
+            <li class="current">@pageTitle</li>
+          </ol>
+        </nav>
+      </div>
+    </div><!-- End Page Title -->
+
+
+      <!-- Service Hero Section -->
+    <section id="hero" class="about section">
+
+      <div class="container">
+
+        <div class="row gy-4" data-aos="fade-up" data-aos-delay="100">
+          <div class="col-lg-5">
+              @if(heroImage != null)
+              {
+            <img src="@heroImage.Url()" class="img-fluid" alt="">
+              }
+          </div>
+          <div class="col-lg-7" data-aos="fade-up" data-aos-delay="200">
+            <div class="content">
+              <h3>@heroHeading</h3>
+              <p>
+                @Html.Raw(heroDescription.ToString().Replace("<p>", "").Replace("</p>", ""))  
+              </p>             
+            </div>
+          </div>
+        </div>
+      </div>
+    </section><!-- /About Section -->
+
+    <!-- Services Section -->
+    <section id="services" class="services section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>@heading</h2>
+        <p>@subHeading</p>
+      </div><!-- End Section Title -->
+
+      <div class="container">
+
+        <div class="row gy-4">
+         @if ( serviceCard != null && serviceCard.Any())
+          {   
+           @foreach (var item in serviceCard)
+           {
+                var content = item.Content;          
+                var heading1 = content.Value<string>("heading");
+                var description = content.Value<string>("description");
+                var iconClass = content.Value<string>("iconClass");
+                var iconColor = content.Value<string>("iconColor");
+          <div class="col-md-6 service-item d-flex"  data-aos="fade-up" data-aos-delay="100">
+            <div class="icon flex-shrink-0"><i class="@iconClass" style="color: @iconColor;"></i></div>
+            <div>
+              <h4 class="title">@heading1</h4>
+              <p class="description"> @Html.Raw(description.ToString().Replace("<p>", "").Replace("</p>", ""))   </p>
+            </div>
+          </div>
+          <!-- End Service Item -->
+           }
+        }     
+        </div>
+      </div>
+    </section>
+    <!-- /Services Section -->
+
+    <!-- Service Cards Section -->
+    <section id="service-cards" class="service-cards section">
+        <div class="container section-title aos-init aos-animate" data-aos="fade-up">
+        <h2>@serviceModelHeading</h2>
+        <p> @Html.Raw(serviceModelSubHeading.ToString().Replace("<p>", "").Replace("</p>", "")) </p>
+      </div>
+  <div class="container">
+    <div class="row gy-4">
+         @if ( modelCardDetails != null && modelCardDetails.Any())
+          {   
+           @foreach (var modelcard in modelCardDetails)
+           {
+                var content = modelcard.Content;          
+                var heading2 = content.Value<string>("heading");
+                var description = content.Value<string>("description");
+                var image = content.Value<Umbraco.Cms.Core.Models.MediaWithCrops>("image");
+      <!-- CARD 1 -->
+      <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="card-item vertical-card">
+          <div class="card-bg">
+              @if(image != null)
+              {
+            <img src="@image.Url()" alt="">
+              }
+          </div>
+          <div class="card-body text-center">
+            <h4 class="card-title">@heading2</h4>
+            <p>
+              @Html.Raw(description.ToString().Replace("<p>", "").Replace("</p>", ""))   
+            </p>
+          </div>
+        </div>
+      </div>
+         }  
+      }     
+
+    </div>
+  </div>
+</section>   <!-- /Service Cards Section -->
+
+
+    <!-- CTA section -->
+ @await Html.GetBlockGridHtmlAsync(Model, "ctaWidget") 
+
+ <!-- Why Clients Choose Vyauma (Trust Section) -->
+     <section id="trust" class="trust section">
+
+      <div class="container">
+
+        <div class="row gy-4" data-aos="fade-up" data-aos-delay="100">
+          <div class="col-lg-5">
+              @if(sideImage != null)
+              {
+            <img src="@sideImage.Url()" class="img-fluid" alt="">
+              }
+          </div>
+          <div class="col-lg-7" data-aos="fade-up" data-aos-delay="200">
+            <div class="content">
+              <p>
+                @Html.Raw(contentDetails.ToString().Replace("<p>", "").Replace("</p>", ""))  
+              </p>             
+            </div>
+          </div>
+        </div>
+      </div>
+    </section><!-- /end Section -->

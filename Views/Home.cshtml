@@ -1,0 +1,200 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@using Umbraco.Cms.Core.Models
+@using Umbraco.Cms.Core.Models.Blocks
+@using Umbraco.Cms.Core.Models.PublishedContent
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+	Layout = "MasterLayout.cshtml";
+    // Hero Section
+    var headline = Model.Value<string>("headline");
+    var subHeading = Model.Value<string>("subHeading");
+
+    var cta1Text = Model.Value<string>("cta1Text");
+    var cta1Links = Model.Value<IEnumerable<Link>>("cta1Link");
+    var cta1Link = cta1Links?.FirstOrDefault();
+
+      var cta2Text = Model.Value<string>("cta2Text");
+    var cta2Links = Model.Value<IEnumerable<Link>>("cta2Link");
+    var cta2Link = cta2Links?.FirstOrDefault();
+
+    var heroImage = Model.Value<Umbraco.Cms.Core.Models.MediaWithCrops>("bannerImage");
+
+    // About Preview Section 
+      var previewHeading = Model.Value<string>("previewHeading");
+    var previewDescription = Model.Value<string>("previewDescription");
+       var ctaText = Model.Value<string>("ctaText");
+    var ctaLinks = Model.Value<IEnumerable<Link>>("ctaLink");
+    var ctaLink = ctaLinks?.FirstOrDefault();
+     var previewImage = Model.Value<Umbraco.Cms.Core.Models.MediaWithCrops>("previewImage");
+
+    // Call To Action Section
+     var ctaHeading = Model.Value<string>("ctaHeading");
+    var ctaDescription = Model.Value<string>("ctaDescription");
+       var ctaText1 = Model.Value<string>("ctaText1");
+    var buttonLinks = Model.Value<IEnumerable<Link>>("buttonLink");
+    var buttonLink = buttonLinks?.FirstOrDefault();
+
+
+    // Services Section
+      var serviceHeading = Model.Value<string>("serviceHeading");
+    var serviceSubHeading = Model.Value<string>("serviceSubHeading");
+    var card = Model.Value<BlockListModel>("card");
+
+
+        // Why Choose Us Section
+     var whyChooseUsHeading = Model.Value<string>("whyChooseUsHeading");
+    var whyChooseUsList = Model.Value<BlockListModel>("whyChooseUsList");
+    var sideBannerImage = Model.Value<Umbraco.Cms.Core.Models.MediaWithCrops>("sideBannerImage");
+}
+
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero section dark-background">
+        @if(heroImage != null)
+        {
+        <img src="@heroImage.Url()" alt="" data-aos="fade-in">
+         }
+      <div class="container">
+        <div class="row">
+          <div class="col-xl-5">
+            <h1 data-aos="fade-up">@headline</h1>
+            <blockquote data-aos="fade-up" data-aos-delay="100">
+              @Html.Raw(subHeading.ToString().Replace("<p>", "").Replace("</p>", ""))  
+            </blockquote>
+            <div class="d-flex" data-aos="fade-up" data-aos-delay="200">
+                @if(cta1Link != null)
+                {
+                 <a href="@cta1Link.Url" class="btn-get-started">@cta1Text</a>
+                }
+                @if(cta2Link != null)
+                {
+              <a href="@cta2Link.Url" class="btn-watch-video d-flex align-items-center"><i class="bi bi-play-circle"></i><span>@cta2Text</span></a>
+                }
+          </div>
+          </div>
+        </div>
+      </div>
+
+    </section><!-- /Hero Section -->
+
+    <!-- Why Us Section -->
+    <section id="why-us" class="why-us section">
+
+      <div class="container">
+
+        <div class="row ">
+
+          <div class="col-lg-5 ">
+              @if(previewImage != null)
+              {
+            <img src="@previewImage.Url()" width="100%" alt="">
+              }
+          </div>
+
+          <div class="col-lg-7 mt-4 mt-lg-0 d-flex flex-column justify-content-center align-items-start" >
+              <div class="w-75 mx-auto"
+                  <div class="item">
+                    <h3 class="mb-5">@previewHeading</h3>
+                   <p> @Html.Raw(previewDescription.ToString().Replace("<p>", "").Replace("</p>", "")) 
+                    </p>
+                    <a href="@ctaLink.Url" class="link-text mt-5">@ctaText</a>
+                  </div>
+                    
+                    </div>
+                
+                </div><!-- End slide item -->
+          </div>
+        
+        </div>
+
+      </div>
+
+    </section><!-- /Why Us Section -->
+
+    <!-- Services Section -->
+    <section id="services" class="services section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Our Services</h2>
+        <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+      </div><!-- End Section Title -->
+
+      <div class="container">
+
+        <div class="row gy-4">
+       @if ( card != null && card.Any())
+         {   
+           @foreach (var cardItem in card)
+           {
+                var content = cardItem.Content;          
+                var heading = content.Value<string>("heading");
+                var description = content.Value<string>("description");
+                var iconClass = content.Value<string>("iconClass");
+                var iconColor = content.Value<string>("iconColor");
+          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="100">
+            <div class="icon flex-shrink-0"><i class="@iconClass" style="color: @iconColor;"></i></div>
+            <div>
+              <h4 class="title">@heading</h4>
+              <p class="description">
+                  @Html.Raw(description.ToString().Replace("<p>", "").Replace("</p>", ""))   
+                  </p>
+              @* <a href="#" class="readmore stretched-link"><span>Learn More</span><i class="bi bi-arrow-right"></i></a> *@
+            </div>
+          </div>
+          <!-- End Service Item -->
+          }
+       }          
+
+        </div>
+
+      </div>
+
+    </section><!-- /Services Section -->
+
+    <!-- CTA section -->
+ @await Html.GetBlockGridHtmlAsync(Model, "ctaDetails") 
+
+    <!-- Features Section -->
+    <section id="features" class="features section">
+
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+            <h3 class="mb-0">@whyChooseUsHeading</h3>
+            <br>
+            <div class="whychoose-content">
+
+          @if ( whyChooseUsList != null && whyChooseUsList.Any())
+         {   
+           @foreach (var list in whyChooseUsList)
+           {
+                var content = list.Content;          
+                var heading = content.Value<string>("heading");
+                var iconClass = content.Value<string>("iconClass");
+                var iconColor = content.Value<string>("iconColor");
+
+              <div class="content mt-3">
+                <div class="icon-list d-flex">
+                  <i class="@iconClass" style="color: @iconColor;"></i>
+                  <span>@heading</span>
+                </div>
+              </div><!-- End Icon List Item-->
+
+              }
+              }        
+            </div>
+          </div>
+          <div class="col-lg-6 position-relative" data-aos="zoom-out" data-aos-delay="200">
+            <div class="phone-wrap">
+              <img src="@sideBannerImage.Url()" alt="Image" class="img-fluid">
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+    <!-- /Features Section -->
+
+   

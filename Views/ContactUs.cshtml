@@ -1,0 +1,133 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@using Umbraco.Cms.Core.Models
+@using Umbraco.Cms.Core.Models.Blocks
+@using Umbraco.Cms.Core.Models.PublishedContent
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+	Layout = "MasterLayout.cshtml";
+
+        
+    //Banner
+        var pageTitle = Model.Value<string>("pageTitle");
+    var bannerImage = Model.Value<Umbraco.Cms.Core.Models.MediaWithCrops>("image");
+
+    // Details Section
+          var introHeading = Model.Value<string>("introHeading");
+          var whyContact = Model.Value<string>("whyContact");
+      
+           ViewData["FormType"] = "ContactUs";     
+           
+  // Media Icon Details
+  var socialLinks =Model.Value<BlockListModel>("socialLinks");
+}
+
+@{
+     var formInfoType = ViewData["FormType"]?.ToString() ?? "";
+}
+    <!-- Page Title -->
+    <div class="page-title dark-background" data-aos="fade" style="@(bannerImage != null 
+        ? $"background-image:url('{bannerImage.Url()}'); background-size:cover; background-position:center;" 
+        : "")">
+      <div class="container">
+        <h1>@pageTitle</h1>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="index.html">Home</a></li>
+            <li class="current">@pageTitle</li>
+          </ol>
+        </nav>
+      </div>
+    </div><!-- End Page Title -->
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact section">
+
+      <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row gy-4">            
+          <div class="col-lg-5">
+              <h3 class="mb-2">
+                 @Html.Raw(introHeading.Replace("<p>", "").Replace("</p>", ""))
+               </h3>
+               <br>
+               @Html.Raw(whyContact.Replace("<p>", "").Replace("</p>", ""))                        
+            
+          </div>
+         
+
+          <div class="col-lg-7">
+             @using (Html.BeginUmbracoForm("SubmitForm", "Form"))
+          {
+               <input type="hidden" name="formInfoType" value="@formInfoType" />
+
+              <div class="php-email-form aos-init aos-animate" data-aos="fade-up" data-aos-delay="500">
+              <div class="row gy-4">
+
+                <div class="col-md-6">
+                  <input type="text" name="firstName" class="form-control" placeholder="First Name *" required="">
+                </div>
+
+                <div class="col-md-6 ">
+                  <input type="text" class="form-control" name="lastName" placeholder="Last Name *" required="">
+                </div>
+
+                <div class="col-md-6 ">
+                  <input type="email" class="form-control" name="email" placeholder="Email Address *" required="">
+                </div>
+
+                 <div class="col-md-6">
+                  <input type="text" name="contactNumber" class="form-control" placeholder="Contact Number" required="">
+                </div>
+
+                <div class="col-md-6 ">
+                  <input type="text" class="form-control" name="appylIn" placeholder="Service Interested In  *" required="">
+                </div>
+
+                @*  <div class="col-md-6">
+                  <input type="text" name="name" class="form-control" placeholder="Subscription *" required="">
+                </div> *@
+                
+
+                <div class="col-md-12">
+                  <textarea class="form-control" name="message" rows="6" placeholder="Message" required=""></textarea>
+                </div>
+
+                <div class="col-md-12 text-center">
+                  <button type="submit">Send Message</button>
+                      @if (TempData["SuccessMessage"] != null)
+                       {
+                           <div class="alert alert-success mt-3">
+                               @TempData["SuccessMessage"]
+                           </div>
+                       }
+                </div>
+
+              </div>
+              </div>
+      }
+          </div><!-- End Contact Form -->
+           <div class="row mt-5">                
+              @if ( socialLinks != null && socialLinks.Any())
+              {   
+                @foreach (var medialink in socialLinks)
+                {
+                     var content = medialink.Content;          
+                     var label = content.Value<string>("label");
+                     var contentDetail = content.Value<string>("contentDetail");
+                     var iconClass = content.Value<string>("iconClass");
+                     var link = content.Value<string>("link");
+                <div class="info-item col-sm-6 col-lg-4 mb-4 mb-lg-0 mt-0" data-aos="fade-up" data-aos-delay="400">
+                   <i class="@iconClass flex-shrink-0 mb-2"></i>
+                   <div>
+                     <h3>@label</h3>
+                     <p>@contentDetail</p>
+                   </div>
+                 </div><!-- End Info Item -->
+                }
+             }          
+            </div>
+        </div>
+
+      </div>
+
+    </section><!-- /Contact Section -->

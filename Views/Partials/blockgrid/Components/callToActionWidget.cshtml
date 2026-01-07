@@ -1,0 +1,32 @@
+﻿@using Umbraco.Cms.Core.Models.Blocks
+@using Umbraco.Cms.Core.Models
+@using Umbraco.Cms.Core.Models.PublishedContent
+@using System.Text
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockGridItem>
+
+@{  
+     var ctaHeading = Model.Content.Value<string>("ctaHeading");
+    var ctaDescription = Model.Content.Value<string>("ctaDescription");
+    var ctaButtonText = Model.Content.Value<string>("ctaButtonText");    
+    var ctaButtonLinks = Model.Content.Value<IEnumerable<Link>>("ctaButtonLink");  
+    var ctaButtonLink = ctaButtonLinks?.FirstOrDefault();
+    var ctaBgImage = Model.Content.Value<Umbraco.Cms.Core.Models.MediaWithCrops>("ctaBgImage");
+}
+    <!-- Call To Action Section -->
+    <section id="call-to-action" class="call-to-action section dark-background">
+
+      <img src="@ctaBgImage.Url()" alt="">
+
+      <div class="container">
+        <div class="row justify-content-center" data-aos="zoom-in" data-aos-delay="100">
+          <div class="col-xl-10">
+            <div class="text-center">
+              <h3>@ctaHeading</h3>
+              <p> @Html.Raw(ctaDescription.ToString().Replace("<p>", "").Replace("</p>", ""))</p>
+              <a class="cta-btn" href="@ctaButtonLink.Url">@ctaButtonText</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section><!-- /Call To Action Section -->
