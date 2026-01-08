@@ -2586,3 +2586,73 @@ section,
   }
 }*/
 
+.tag-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    position: relative;
+}
+
+.tag {
+    position: relative;
+    font-size: 7px;
+    color: #fff;
+    text-decoration: none;
+    padding: 6px 12px;
+/*    border: 1px solid #4a90e2;*/
+    border-radius: 20px;
+    background: #132131;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+    /* Hover effect */
+    .tag:hover {
+        background-color: #55B7e4;
+        color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
+    }
+
+    /* Tooltip */
+    .tag::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        top: -35px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #55b7e4;
+        color: #ffffff;
+        font-size: 10px;
+        padding: 6px 10px;
+        border-radius: 8px;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    /* Tooltip arrow */
+    .tag::before {
+        content: "";
+        position: absolute;
+        top: -12px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 6px;
+        border-style: solid;
+        border-color: transparent transparent #1f2937 transparent;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    /* Show tooltip on hover */
+    .tag:hover::after,
+    .tag:hover::before {
+        opacity: 1;
+    }
+
+.no-tooltip::after,
+.no-tooltip::before {
+    display: none !important;
+}

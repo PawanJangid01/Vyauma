@@ -94,7 +94,7 @@
           <div class="col-lg-7 mt-4 mt-lg-0 d-flex flex-column justify-content-center align-items-start" >
               <div class="w-75 mx-auto"
                   <div class="item">
-                    <h3 class="mb-5">@previewHeading</h3>
+                    <h3 class="mb-2">@previewHeading</h3>
                    <p> @Html.Raw(previewDescription.ToString().Replace("<p>", "").Replace("</p>", "")) 
                     </p>
                     <a href="@ctaLink.Url" class="link-text mt-5">@ctaText</a>
@@ -117,7 +117,7 @@
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
         <h2>Our Services</h2>
-        <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+        <p>@serviceSubHeading</p>
       </div><!-- End Section Title -->
 
       <div class="container">
