@@ -12,9 +12,9 @@
 --------------------------------------------------------------*/
 /* Fonts */
 :root {
-  --default-font: "Roboto",  system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --heading-font: "Montserrat",  sans-serif;
-  --nav-font: "Raleway",  sans-serif;
+    --default-font: "Inter", sans-serif;
+    --heading-font: "Montserrat", sans-serif;
+    --nav-font: "Raleway", sans-serif;
 }
 
 /* Global Colors - The following color variables are used throughout the website. Updating them here will change the color scheme of the entire website */
@@ -225,11 +225,11 @@ h6 {
     padding-right: 0;
   }
 
-  .navmenu li:hover>a,
-  .navmenu .active,
-  .navmenu .active:focus {
-    color: var(--nav-hover-color);
-  }
+    .navmenu li:hover > a,
+    .navmenu .active,
+    .navmenu .active:focus {
+        color: #56b8e6;
+    }
 
   .navmenu .dropdown ul {
     margin: 0;
@@ -1253,10 +1253,12 @@ section,
 # Service Cards Section
 --------------------------------------------------------------*/
 .service-cards .card-item {
-  background-color: var(--surface-color);
-  border: 1px solid color-mix(in srgb, var(--default-color), transparent 85%);
-  position: relative;
-  border-radius: 0;
+    background-color: var(--surface-color);
+    border: 1px solid color-mix(in srgb, var(--default-color), transparent 85%);
+    position: relative;
+    border-radius: 0;
+    display: flex;
+    flex-flow: column;
 }
 
 .service-cards .card-item .card-bg {
@@ -2586,3 +2588,390 @@ section,
   }
 }*/
 
+.tag-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    position: relative;
+    bottom: 50px;
+    padding:30px;
+}
+
+.tag {
+    position: relative;
+    font-size: 7px;
+    color: #fff;
+    text-decoration: none;
+    padding: 6px 12px;
+/*    border: 1px solid #4a90e2;*/
+    border-radius: 20px;
+    background: #132131;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+    /* Hover effect */
+    .tag:hover {
+        background-color: #55B7e4;
+        color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
+    }
+
+    /* Tooltip */
+    .tag::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        top: -35px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #55b7e4;
+        color: #ffffff;
+        font-size: 10px;
+        padding: 6px 10px;
+        border-radius: 8px;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    /* Tooltip arrow */
+    .tag::before {
+        content: "";
+        position: absolute;
+        top: -12px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 6px;
+        border-style: solid;
+        border-color: transparent transparent #1f2937 transparent;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    /* Show tooltip on hover */
+    .tag:hover::after,
+    .tag:hover::before {
+        opacity: 1;
+    }
+
+.no-tooltip::after,
+.no-tooltip::before {
+    display: none !important;
+}
+
+
+/*Thank You page */
+.thankyou-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+    .thankyou-page .thankyou-title {
+        font-size: clamp(28px, 5vw, 60px);
+        line-height: clamp(1.2, 1.4, 1.35);
+        font-weight: 600;
+    }
+
+.thankyou-dec {
+    font-size: clamp(14px, 2vw, 20px);
+    line-height: clamp(1.5, 1.7, 1.9);
+    margin: 30px auto 40px;
+    max-width: 1000px;
+}
+
+.thankyou-social-title {
+    font-size: clamp(16px, 2.2vw, 22px);
+    font-weight: 600;
+    margin: 40px 0 20px;
+}
+
+
+.thankyou-page .icon-circle {
+    width: clamp(160px, 30vw, 270px);
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.thankyou-page .social {
+    gap: 28px;
+}
+
+    .thankyou-page .social a {
+        width: 45px;
+        height: 45px;
+        background: #000;
+        color: #1e88ff;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+    }
+
+        .thankyou-page .social a:hover {
+            background: #1e88ff;
+            color: #fff;
+        }
+
+/*Contact form*/
+.error-text {
+    color: #dc3545;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.is-invalid {
+    border-color: #dc3545;
+}
+
+.custom-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    inset: 0;
+    background: rgba(0,0,0,.6);
+    justify-content: center;
+    align-items: center;
+}
+
+    .custom-modal.show {
+        display: flex;
+    }
+
+.modal-content {
+    background: #fff;
+    padding: 25px;
+    width: 100%;
+    max-width: 550px;
+    border-radius: 10px;
+    position: relative;
+}
+
+.close-modal {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+/* Match SELECT exactly with INPUT fields */
+.custom-select {
+    height: 45px; /* Same as input */
+    padding: 10px 14px;
+    font-size: 15px;
+    line-height: 1.5;
+    color: #bcb6b3; /* Placeholder color */
+    border: 1px solid #d5d1cf;
+    border-radius: 0px;
+    background-color: #fff;
+    /* Remove default browser styling */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    /* Custom dropdown arrow */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%236c757d' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 10px;
+    cursor: pointer;
+}
+
+    /* When value is selected */
+    .custom-select:valid {
+        color: #212529; /* Same text color as input */
+    }
+
+    /* Focus state – same as Bootstrap input */
+    .custom-select:focus {
+        border-color: #86b7fe;
+        outline: none;
+        box-shadow: 0 0 0 0.2rem rgba(13,110,253,.25);
+    }
+
+
+
+/* popup form css   */
+
+/* ===== Custom Modal Overlay ===== */
+#getStartedModal.custom-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(3px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.45s ease, visibility 0.45s ease;
+    z-index: 9999;
+}
+
+    /* Show modal */
+
+    #getStartedModal.custom-modal.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* ===== Modal Box ===== */
+
+    #getStartedModal .custom-modal .modal-content {
+        background: #fff;
+        width: 100%;
+        max-width: 650px;
+        padding: 28px;
+        border-radius: 14px;
+        position: relative;
+        /* Animation */
+        transform: scale(0.85) translateY(20px);
+        opacity: 0;
+        transition: all 0.45s ease;
+    }
+
+    /* Animate modal box */
+
+    #getStartedModal .custom-modal.show .modal-content {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+
+/* ===== Close Button ===== */
+
+#getStartedModal .close-modal {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+    color: #666;
+    transition: color 0.2s ease;
+}
+
+
+    #getStartedModal .close-modal:hover {
+        color: #000;
+    }
+
+/* ===== Popup Title ===== */
+
+#getStartedModal .modal-content h3 {
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+/* ===== Input consistency ===== */
+
+#getStartedModal .modal-content .form-control {
+    /* height: 48px; */
+    font-size: 15px;
+    border-radius: 0;
+}
+
+
+#getStartedModal .modal-content textarea.form-control {
+    height: auto;
+}
+
+/* ===== Button ===== */
+
+#getStartedModal .modal-content button {
+    padding: 12px;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+/* ===== Error text ===== */
+.error-text {
+    color: #dc3545;
+    font-size: 13px;
+}
+
+
+.btn-submit {
+    color: var(--contrast-color);
+    background: var(--accent-color);
+    font-family: var(--heading-font);
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 1px;
+    display: inline-block;
+    padding: 8px 40px !important;
+    border-radius: 50px;
+    transition: 0.5s;
+    border: 0;
+}
+
+    .btn-submit:hover {
+        background: color-mix(in srgb, var(--accent-color) 90%, white 15%);
+    }
+
+
+/* policy css    */
+
+.policy {
+    background-image: url("../img/contact-bg.png");
+    background-position: top center;
+    background-repeat: no-repeat;
+    position: relative;
+    background-size: auto 50%;
+}
+
+@media (max-width: 640px) {
+    .policy {
+        background-position: center 50px;
+        background-size: contain;
+    }
+}
+
+.policy:before {
+    content: "";
+    background: color-mix(in srgb, var(--background-color), transparent 30%);
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.policy .info-item + .info-item {
+    margin-top: 40px;
+}
+
+.policy .info-item i {
+    background: var(--accent-color);
+    color: var(--contrast-color);
+    font-size: 20px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50px;
+    transition: all 0.3s ease-in-out;
+    margin-right: 15px;
+}
+
+.policy .info-item h3 {
+    padding: 0;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.policy .info-item p {
+    padding: 0;
+    margin-bottom: 0;
+    font-size: 14px;
+}

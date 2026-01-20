@@ -17,6 +17,7 @@
     var headerLogo = layout?.Value<MediaWithCrops>("headerLogo");
     var headerIcon = layout?.Value<MediaWithCrops>("headerIcon");
     var headerMenu = layout?.Value<BlockListModel>("headerMenu");
+    var faviconIcon = layout?.Value<MediaWithCrops>("faviconIcon");
 
     // Footer Section
     
@@ -26,6 +27,33 @@
      var pageLinks = layout?.Value<string>("pageLinks");
      var contactDetails = layout?.Value<string>("contactDetails");
      var policyLink = layout?.Value<string>("policyLink");
+     var copyRightText = layout?.Value<string>("copyRightText");
+
+    var currentUrl = Context.Request.Path.Value?.ToLower();
+
+     // Page-level SEO
+var seoBlock = Model.Value<BlockListModel>("seoSetting")?
+                    .FirstOrDefault()?.Content;
+var pageMetaTitle = seoBlock?.Value<string>("metaTitle");
+var pageMetaDescription = seoBlock?.Value<string>("metaDescription");
+var pageMetaKeywords = seoBlock?.Value<string>("metaKeywords");
+var noIndex = seoBlock?.Value<bool>("noIndexNoFollow") ?? false;
+
+      // Final SEO values (Page → Fallback → Hard default)
+    var metaTitle =
+        !string.IsNullOrWhiteSpace(pageMetaTitle)
+        ? pageMetaTitle
+        : layout?.Value<string>("defaultMetaTitle") ?? "Vyauma";
+
+    var metaDescription =
+        !string.IsNullOrWhiteSpace(pageMetaDescription)
+        ? pageMetaDescription
+        : layout?.Value<string>("defaultMetaDescription");
+
+    var metaKeywords =
+        !string.IsNullOrWhiteSpace(pageMetaKeywords)
+        ? pageMetaKeywords
+        : layout?.Value<string>("defaultMetaKeywords");
 
 }
 
@@ -36,18 +64,33 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Index - Nova Bootstrap Template</title>
-  <meta name="description" content="">
-  <meta name="keywords" content="">
+  <title>@metaTitle</title>
+@if (!string.IsNullOrWhiteSpace(metaDescription))
+{
+    <meta name="description" content="@metaDescription" />
+}
+@if (!string.IsNullOrWhiteSpace(metaKeywords))
+{
+    <meta name="keywords" content="@metaKeywords" />
+}
+@if (noIndex)
+{
+    <meta name="robots" content="noindex, nofollow" />
+}
+
+<link rel="canonical" href="@Model.Url(mode: UrlMode.Absolute)" />
 
   <!-- Favicons -->
-  <link href="~/assets/img/favicon.png" rel="icon">
-  <link href="~/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  @if(faviconIcon != null)
+  {
+  <link href="@faviconIcon.Url()?"  rel="icon">
+  }
+  @* <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon"> *@
 
   <!-- Fonts -->
-  <link href="https://fonts.googleapis.com" rel="preconnect">
-  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link href="~/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -57,7 +100,7 @@
   <link href="~/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
   <!-- Main CSS File -->
-  <link href="~/assets/css/main.css" rel="stylesheet">
+  <link href="~/assets/css/style.css" rel="stylesheet">
 
   <!-- =======================================================
   * Template Name: Nova
@@ -72,12 +115,12 @@
 
   <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
-
-      <a href="/" class="logo d-flex align-items-center">
-        <!-- Uncomment the line below if you also wish to use an image logo -->
-        <!-- <img src="assets/img/logo.png" alt=""> -->
-        <img src="~/assets/img/vyauma_Logo_(White).png" alt="">
+        @if(headerLogo != null)
+        {
+      <a href="/" class="logo d-flex align-items-center">       
+        <img src="@headerLogo.Url()" alt="">
       </a>
+        }
 
       <nav id="navmenu" class="navmenu">
         <ul>
@@ -89,7 +132,19 @@
                 var label = content.Value<string>("label");
                 var headMenuLinks = content.Value<IEnumerable<Link>>("link");
                 var link = headMenuLinks?.FirstOrDefault();
-          <li><a href="@link.Url" class="active">@label<br></a></li>
+
+                 var menuUrl = link.Url?.ToLower();
+
+                 var isActive =
+                 menuUrl == currentUrl ||
+                 (menuUrl != "/" && currentUrl.StartsWith(menuUrl));  
+                 
+          <li>
+              @if(link != null && label != null)
+              {
+              <a href="@link.Url" class="@(isActive ? "active" : "")">@label<br></a>
+              }
+           </li>
            }
          }
         </ul>
@@ -103,34 +158,32 @@
         <main class="main">
             @RenderBody()
         </main>
+
   <footer id="footer" class="footer light-background">
 
     <div class="footer-top">
       <div class="container">
         <div class="row gy-4">
-          <div class="col-lg-5 col-md-12 footer-about">
+          <div class="col-md-6 col-lg-6 footer-about">
+              @if(footerLogo != null)
+              {
             <a href="#" class="logo d-flex align-items-center">              
               <img src="@footerLogo.Url()" alt="" >
             </a>
+              }
             @Html.Raw(footerDescription.ToString().Replace("<p>", "").Replace("</p>", "")) 
             <div class="social-links d-flex mt-4">
-                <div class="socials d-flex align-items-center mt-2"><a target="_blank" data-router-slot="disabled"
-        href="#"
-        type="external"><img src="~/assets/img/linkedin.png" alt="linkedin" loading="lazy"></a> <a target="_blank"
-        data-router-slot="disabled" href="#"
-        type="external"><img src="~/assets/img/youtube.png" alt="youtube" loading="lazy"></a> <a target="_blank"
-        data-router-slot="disabled" href="#"
-        type="external"><img src="~/assets/img/facebook.png" alt="facebook" loading="lazy"></a></div>
-              @* @Html.Raw(socialLink.ToString().Replace("<p>", "").Replace("</p>", "")) / *@
+                
+            @Html.Raw(socialLink.ToString().Replace("<p>", "").Replace("</p>", "")) 
             </div>
           </div>
 
-          <div class="col-lg-2 col-6 footer-links">
+          <div class="col-md-6 col-lg-3  footer-links">
            @Html.Raw(pageLinks.ToString().Replace("<p>", "").Replace("</p>", "")) 
           </div>
          
 
-          <div class="col-lg-2 col-6 footer-links">
+          <div class="col-md-6 col-lg-3  footer-links">
             @Html.Raw(contactDetails.ToString().Replace("<p>", "").Replace("</p>", "")) 
           </div>
 
@@ -139,7 +192,7 @@
     </div>
 
     <div class="container copyright text-center">
-      <p>© <span>Copyright 2026</span> <strong class="px-1 sitename">Vyauna</strong></p> 
+      <p> @Html.Raw(copyRightText.ToString().Replace("<p>", "").Replace("</p>", "")) </p> 
       <br> 
       <p class="mb-1">
              @Html.Raw(policyLink.ToString().Replace("<p>", "").Replace("</p>", "")) 
@@ -164,7 +217,7 @@
   <script src="~/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
 
   <!-- Main JS File -->
-  <script src="~/assets/js/main.js"></script>
+  <script src="~/assets/scripts/main.js"></script>
 
 </body>
 

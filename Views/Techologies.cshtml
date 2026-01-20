@@ -157,7 +157,7 @@
 
                     <!-- CONTENT -->
                     <div class="col-md-6 d-flex flex-column justify-content-center align-items-start @(isEven ? "" : "order-md-1")">
-                        <div class="career-card mb-5 pt-5 ps-lg-5">
+                        <div class="career-card mb-5 pt-5  @(isEven ? "ps-sm-5" : "pe-sm-5")">
                             @if (!string.IsNullOrEmpty(heading))
                             {
                                 <h3 class="career-title">@heading</h3>

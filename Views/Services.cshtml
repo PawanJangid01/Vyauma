@@ -122,6 +122,7 @@
                 var content = modelcard.Content;          
                 var heading2 = content.Value<string>("heading");
                 var description = content.Value<string>("description");
+                var tags = content.Value<string>("tags");
                 var image = content.Value<Umbraco.Cms.Core.Models.MediaWithCrops>("image");
       <!-- CARD 1 -->
       <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
@@ -134,12 +135,19 @@
           </div>
           <div class="card-body text-center">
             <h4 class="card-title">@heading2</h4>
-            <p>
-              @Html.Raw(description.ToString().Replace("<p>", "").Replace("</p>", ""))   
-            </p>
-          </div>
-        </div>
-      </div>
+            <div>
+           @if(description != null)
+          {
+              @Html.Raw(description.ToString().Replace("<p>", "").Replace("</p>", "")) 
+          }
+            </div>
+          </div> 
+          @if(tags != null)
+          {
+          @Html.Raw(tags.ToString().Replace("<p>", "").Replace("</p>", "")) 
+          }
+         </div>
+    </div>
          }  
       }     
 

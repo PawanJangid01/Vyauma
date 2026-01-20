@@ -45,8 +45,13 @@
      var whyChooseUsHeading = Model.Value<string>("whyChooseUsHeading");
     var whyChooseUsList = Model.Value<BlockListModel>("whyChooseUsList");
     var sideBannerImage = Model.Value<Umbraco.Cms.Core.Models.MediaWithCrops>("sideBannerImage");
+
+      ViewData["FormType"] = "Career"; 
 }
 
+<style>
+
+</style> 
 
     <!-- Hero Section -->
     <section id="hero" class="hero section dark-background">
@@ -64,7 +69,7 @@
             <div class="d-flex" data-aos="fade-up" data-aos-delay="200">
                 @if(cta1Link != null)
                 {
-                 <a href="@cta1Link.Url" class="btn-get-started">@cta1Text</a>
+                 <a href="@cta1Link.Url" id="openGetStarted" class="btn-get-started">@cta1Text</a>
                 }
                 @if(cta2Link != null)
                 {
@@ -94,10 +99,13 @@
           <div class="col-lg-7 mt-4 mt-lg-0 d-flex flex-column justify-content-center align-items-start" >
               <div class="w-75 mx-auto"
                   <div class="item">
-                    <h3 class="mb-5">@previewHeading</h3>
+                    <h3 class="mb-2">@previewHeading</h3>
                    <p> @Html.Raw(previewDescription.ToString().Replace("<p>", "").Replace("</p>", "")) 
                     </p>
+                    @if(ctaLink != null)
+                    {
                     <a href="@ctaLink.Url" class="link-text mt-5">@ctaText</a>
+                    }
                   </div>
                     
                     </div>
@@ -117,7 +125,7 @@
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
         <h2>Our Services</h2>
-        <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+        <p>@serviceSubHeading</p>
       </div><!-- End Section Title -->
 
       <div class="container">
@@ -187,7 +195,10 @@
           </div>
           <div class="col-lg-6 position-relative" data-aos="zoom-out" data-aos-delay="200">
             <div class="phone-wrap">
+                @if(sideBannerImage != null)
+                {
               <img src="@sideBannerImage.Url()" alt="Image" class="img-fluid">
+                }
             </div>
           </div>
         </div>
@@ -197,4 +208,208 @@
     </section>
     <!-- /Features Section -->
 
-   
+   <div id="getStartedModal" class="custom-modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+
+        <h3 class="mb-3">Contact Details</h3>
+
+        @using (Html.BeginUmbracoForm("SubmitForm", "Form", FormMethod.Post, new { id = "popupForm" }))
+        {
+            <input type="hidden" name="formInfoType" value="Career" />
+
+            <div class="row gy-3">
+
+                <div class="col-md-6">
+                    <input type="text" id="p_firstName" name="firstName" class="form-control" placeholder="First Name *">
+                </div>
+
+                <div class="col-md-6">
+                    <input type="text" id="p_lastName" name="lastName" class="form-control" placeholder="Last Name *">
+                </div>
+
+                <div class="col-md-6">
+                    <input type="email" id="p_email" name="email" class="form-control" placeholder="Email *">
+                </div>
+
+                <div class="col-md-6">
+                    <input type="text" id="p_contactNumber" name="contactNumber" class="form-control" placeholder="Contact Number *">
+                </div>
+
+                <div class="col-md-12">
+                    <textarea id="p_message" name="message" class="form-control" rows="4" placeholder="Message *"></textarea>
+                </div>
+
+                <div class="col-md-12 text-center">
+                    <button type="submit" class="btn-submit">Submit</button>
+                    <div id="popupServerError" class="error-text mt-2" style="display:none;"></div>
+                </div>
+
+            </div>
+        }
+    </div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const modal = document.getElementById("getStartedModal");
+    const openBtn = document.getElementById("openGetStarted");
+    const closeBtn = modal.querySelector(".close-modal");
+
+    if (!modal || !openBtn) return;
+
+    // Open modal (slow motion)
+    openBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        modal.classList.add("show");
+        document.body.style.overflow = "hidden"; // prevent background scroll
+    });
+
+    // Close modal
+    function closeModal() {
+        modal.classList.remove("show");
+        document.body.style.overflow = "";
+    }
+
+    closeBtn.addEventListener("click", closeModal);
+
+    // Close when clicking outside
+    modal.addEventListener("click", function (e) {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    // ESC key close
+    document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && modal.classList.contains("show")) {
+            closeModal();
+        }
+    });
+
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.getElementById("popupForm");
+    if (!form) return;
+
+    const serverError = document.getElementById("popupServerError");
+
+    const fields = {
+        firstName: {
+            el: document.getElementById("p_firstName"),
+            message: "First name is required"
+        },
+        lastName: {
+            el: document.getElementById("p_lastName"),
+            message: "Last name is required"
+        },
+        email: {
+            el: document.getElementById("p_email"),
+            message: "Enter a valid email address",
+            regex: /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/
+        },
+        contactNumber: {
+            el: document.getElementById("p_contactNumber"),
+            message: "Enter a valid 10-digit contact number",
+            regex: /^\d{10}$/
+        },
+        message: {
+            el: document.getElementById("p_message"),
+            message: "Message is required"
+        }
+    };
+
+    function showError(field, msg) {
+        clearError(field);
+        field.classList.add("is-invalid");
+
+        const error = document.createElement("div");
+        error.className = "error-text";
+        error.innerText = msg;
+
+        field.closest(".col-md-6, .col-md-12").appendChild(error);
+    }
+
+    function clearError(field) {
+        field.classList.remove("is-invalid");
+
+        const container = field.closest(".col-md-6, .col-md-12");
+        const err = container.querySelector(".error-text");
+        if (err) err.remove();
+    }
+
+    function validateForm() {
+        let isValid = true;
+
+        Object.values(fields).forEach(f => {
+            const value = f.el.value.trim();
+            clearError(f.el);
+
+            if (!value) {
+                showError(f.el, f.message);
+                isValid = false;
+            }
+            else if (f.regex && !f.regex.test(value)) {
+                showError(f.el, f.message);
+                isValid = false;
+            }
+        });
+
+        return isValid;
+    }
+
+    // Only numbers, max 10 digits
+    fields.contactNumber.el.addEventListener("input", function () {
+        this.value = this.value.replace(/\D/g, "").slice(0, 10);
+        clearError(this);
+    });
+
+    // Clear error while typing
+    Object.values(fields).forEach(f => {
+        f.el.addEventListener("input", () => clearError(f.el));
+    });
+
+form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    serverError.style.display = "none";
+    serverError.innerText = "";
+
+    if (!validateForm()) return;
+
+    const btn = form.querySelector("button[type='submit']");
+    btn.disabled = true;
+    btn.innerText = "Sending...";
+
+    fetch(form.action, {
+        method: "POST",
+        body: new FormData(form),
+        headers: { "X-Requested-With": "XMLHttpRequest" }
+    })
+    .then(res => res.json())
+    .then(res => {
+        if (res.success) {
+            form.reset();                 // optional
+            window.location.href = res.redirectUrl; // ✅ THANK YOU PAGE
+        } else {
+            serverError.innerText = res.message;
+            serverError.style.display = "block";
+            btn.disabled = false;
+            btn.innerText = "Submit";
+        }
+    })
+    .catch(() => {
+        serverError.innerText = "Something went wrong";
+        serverError.style.display = "block";
+        btn.disabled = false;
+        btn.innerText = "Submit";
+    });
+});
+
+
+});
+</script>
