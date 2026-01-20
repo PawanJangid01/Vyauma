@@ -162,3 +162,131 @@
   });
 
 })();
+
+
+
+// form valiudation
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.getElementById("contactForm");
+
+    const fields = {
+        firstName: {
+            el: document.getElementById("firstName"),
+            message: "First name is required"
+        },
+        lastName: {
+            el: document.getElementById("lastName"),
+            message: "Last name is required"
+        },
+        email: {
+            el: document.getElementById("email"),
+            message: "Enter a valid email address",
+            regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        },
+        contactNumber: {
+            el: document.getElementById("contactNumber"),
+            message: "Enter a valid 10-digit contact number",
+            regex: /^\d{10}$/
+        },
+        appylIn: {
+            el: document.getElementById("appylIn"),
+            message: "This field is required"
+        },
+        message: {
+            el: document.getElementById("message"),
+            message: "Message is required"
+        }
+    };
+
+    function showError(field, msg) {
+        clearError(field);
+        field.classList.add("is-invalid");
+
+        const error = document.createElement("div");
+        error.className = "error-text";
+        error.innerText = msg;
+
+        field.closest(".col-md-6, .col-md-12").appendChild(error);
+    }
+
+    function clearError(field) {
+        field.classList.remove("is-invalid");
+
+        const container = field.closest(".col-md-6, .col-md-12");
+        const err = container.querySelector(".error-text");
+        if (err) err.remove();
+    }
+
+
+    function validateForm() {
+        let isValid = true;
+
+        Object.keys(fields).forEach(key => {
+            const field = fields[key];
+            const value = field.el.value.trim();
+
+            clearError(field.el);
+
+            if (!value) {
+                showError(field.el, field.message);
+                isValid = false;
+            }
+            else if (field.regex && !field.regex.test(value)) {
+                showError(field.el, field.message);
+                isValid = false;
+            }
+        });
+
+        return isValid;
+    }
+
+    //Only numbers in contact number
+    fields.contactNumber.el.addEventListener("input", function () {
+        this.value = this.value.replace(/\D/g, "").slice(0, 10);
+    });
+
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        // Clear server error before validating
+        const serverError = document.getElementById("serverError");
+        serverError.style.display = "none";
+        serverError.innerText = "";
+
+        if (!validateForm()) return;
+
+        const btn = form.querySelector("button[type='submit']");
+        btn.disabled = true;
+        btn.innerText = "Sending...";
+
+        fetch(form.action, {
+            method: "POST",
+            body: new FormData(form),
+            headers: { "X-Requested-With": "XMLHttpRequest" }
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.success) {
+                    window.location.href = res.redirectUrl;
+                } else {
+                    
+                    serverError.innerText = res.message || "Something went wrong";
+                    serverError.style.display = "block";
+
+                    btn.disabled = false;
+                    btn.innerText = "Send Message";
+                }
+            })
+            .catch(() => {
+                serverError.innerText = "Unexpected error occurred. Please try again.";
+                serverError.style.display = "block";
+
+                btn.disabled = false;
+                btn.innerText = "Send Message";
+            });
+    });
+
+
+});

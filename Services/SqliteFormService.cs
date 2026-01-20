@@ -62,7 +62,7 @@ namespace vyaauma.Services
             command.Parameters.AddWithValue("$lastName", lastName);
             command.Parameters.AddWithValue("$email", email);
             command.Parameters.AddWithValue("$contactNumber", contactNumber);
-            command.Parameters.AddWithValue("$appylIn", appylIn);
+            command.Parameters.AddWithValue("$appylIn", appylIn ?? string.Empty);
             command.Parameters.AddWithValue("$message", message);
             command.Parameters.AddWithValue("$submittedAt", DateTime.UtcNow);
             command.Parameters.AddWithValue("$formInfoType", formInfoType ?? string.Empty);
@@ -92,7 +92,7 @@ namespace vyaauma.Services
             var senderEmail =  settings.Value<string>("senderEmail");
             var fromName = settings.Value<string>("fromName");
             var fullName = firstName + lastName;
-            var templateId = 5;
+            var templateId = settings.Value<string>("tempId");
 
             Dictionary<string, object> templateParams = new Dictionary<string, object>
                {

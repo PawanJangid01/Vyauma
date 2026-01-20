@@ -1,0 +1,47 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+	Layout = "MasterLayout.cshtml";
+
+	    //Banner
+        var pageTitle = Model.Value<string>("pageTitle");       
+    var bannerImage = Model.Value<Umbraco.Cms.Core.Models.MediaWithCrops>("image");
+
+     var termsOfServiceDescription = Model.Value<string>("termsOfServiceDescription");
+}
+
+
+    <!-- Page Title -->
+    <div class="page-title dark-background" data-aos="fade" style="@(bannerImage != null 
+        ? $"background-image:url('{bannerImage.Url()}'); background-size:cover; background-position:center;" 
+        : "")">
+      <div class="container">
+        <h1>@pageTitle</h1>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="/">Home</a></li>
+            <li class="current">@pageTitle</li>
+          </ol>
+        </nav>
+      </div>
+    </div><!-- End Page Title -->
+
+
+    <!-- Contact Section -->
+    <section id="policy" class="policy section">
+
+      <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row gy-4">            
+          <div class="col-lg-12">
+              <p class="mb-2">
+                 @Html.Raw(termsOfServiceDescription.Replace("<p>", "").Replace("</p>", ""))
+               </p>                     
+            
+          </div>
+ 
+        </div>
+
+      </div>
+
+    </section><!-- /Contact Section -->

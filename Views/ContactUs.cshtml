@@ -24,6 +24,7 @@
 @{
      var formInfoType = ViewData["FormType"]?.ToString() ?? "";
 }
+
     <!-- Page Title -->
     <div class="page-title dark-background" data-aos="fade" style="@(bannerImage != null 
         ? $"background-image:url('{bannerImage.Url()}'); background-size:cover; background-position:center;" 
@@ -32,7 +33,7 @@
         <h1>@pageTitle</h1>
         <nav class="breadcrumbs">
           <ol>
-            <li><a href="index.html">Home</a></li>
+            <li><a href="/">Home</a></li>
             <li class="current">@pageTitle</li>
           </ol>
         </nav>
@@ -56,7 +57,7 @@
          
 
           <div class="col-lg-7">
-             @using (Html.BeginUmbracoForm("SubmitForm", "Form"))
+            @using (Html.BeginUmbracoForm("SubmitForm", "Form", FormMethod.Post, new { id = "contactForm" }))
           {
                <input type="hidden" name="formInfoType" value="@formInfoType" />
 
@@ -64,49 +65,52 @@
               <div class="row gy-4">
 
                 <div class="col-md-6">
-                  <input type="text" name="firstName" class="form-control" placeholder="First Name *" required="">
+                  <input type="text" id="firstName" name="firstName" class="form-control" placeholder="First Name *" required="">
                 </div>
 
                 <div class="col-md-6 ">
-                  <input type="text" class="form-control" name="lastName" placeholder="Last Name *" required="">
+                  <input type="text" id="lastName" class="form-control" name="lastName" placeholder="Last Name *" required="">
                 </div>
 
                 <div class="col-md-6 ">
-                  <input type="email" class="form-control" name="email" placeholder="Email Address *" required="">
+                  <input type="email"   id="email" class="form-control" name="email" placeholder="Email Address *" required="">
                 </div>
 
                  <div class="col-md-6">
-                  <input type="text" name="contactNumber" class="form-control" placeholder="Contact Number" required="">
+                  <input type="text" id="contactNumber"  name="contactNumber" class="form-control" placeholder="Contact Number" required="">
                 </div>
 
-                <div class="col-md-6 ">
-                  <input type="text" class="form-control" name="appylIn" placeholder="Service Interested In  *" required="">
-                </div>
+               <div class="col-md-6">
+                   <select id="appylIn"
+                           name="appylIn"
+                           class="form-control custom-select"
+                           required>
+                       <option value="" hidden>Service Interested In *</option>
+                       <option value="Custom Software Development">Custom Software Development</option>
+                       <option value="Staff Augmentation">Staff Augmentation</option>
+                       <option value="Dedicated Development Teams">Dedicated Development Teams</option>
+                       <option value="Cloud & DevOps">Cloud & DevOps</option>
+                       <option value="AI & Data Solutions">AI & Data Solutions</option>
+                       <option value="Support & Maintenance">Support & Maintenance</option>
+                   </select>
 
-                @*  <div class="col-md-6">
-                  <input type="text" name="name" class="form-control" placeholder="Subscription *" required="">
-                </div> *@
+              </div>
                 
 
                 <div class="col-md-12">
-                  <textarea class="form-control" name="message" rows="6" placeholder="Message" required=""></textarea>
+                  <textarea class="form-control" id="message" name="message" rows="6" placeholder="Message" required=""></textarea>
                 </div>
 
                 <div class="col-md-12 text-center">
                   <button type="submit">Send Message</button>
-                      @if (TempData["SuccessMessage"] != null)
-                       {
-                           <div class="alert alert-success mt-3">
-                               @TempData["SuccessMessage"]
-                           </div>
-                       }
+                     <div id="serverError" class="error-text mt-2" style="display:none;"></div>
                 </div>
 
               </div>
               </div>
       }
           </div><!-- End Contact Form -->
-           <div class="row mt-5">                
+           <div class="row mt-5" style="margin-left: 32px">                
               @if ( socialLinks != null && socialLinks.Any())
               {   
                 @foreach (var medialink in socialLinks)

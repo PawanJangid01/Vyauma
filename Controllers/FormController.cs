@@ -79,14 +79,14 @@ namespace vyaauma.Controllers
 
             if (formInfoType == "ContactUs")
             {
-                formInfo = settings.Value<string>("contactUsInfo");
-                var thankYouLink = settings.Value<IEnumerable<Link>>("contactUs");
+                formInfo = "contactUsInfo";
+                var thankYouLink = settings.Value<IEnumerable<Link>>("thankYouPageUrl");
                 url = thankYouLink?.FirstOrDefault()?.Url;
             }
             else if (formInfoType == "Career")
             {
-                formInfo = settings.Value<string>("careerInfo");
-                var thankYouLink = settings.Value<IEnumerable<Link>>("career");
+                formInfo = "careerInfo";
+                var thankYouLink = settings.Value<IEnumerable<Link>>("thankYouPageUrl");
                 url = thankYouLink?.FirstOrDefault()?.Url;
             }
 
@@ -100,7 +100,7 @@ namespace vyaauma.Controllers
 
             template = ReplaceOrRemove(template, "FormInfo", "Form Info", formInfo);
             template = ReplaceOrRemove(template, "FullName", "Full Name", fullName);
-            template = ReplaceOrRemove(template, "ApplyIn", "ApplyIn", appylIn);
+            template = ReplaceOrRemove(template, "ApplyIn", "Interested In", appylIn);
             template = ReplaceOrRemove(template, "Email", "Email", email);
             template = ReplaceOrRemove(template, "ContactNumber", "Contact Number", contactNumber);
             template = ReplaceOrRemove(template, "Message", "Message", message);
@@ -109,9 +109,11 @@ namespace vyaauma.Controllers
             _formService.SendEmail(template);
 
 
-
-            TempData["SuccessMessage"] = "Thank you for your submission!";
-            return RedirectToCurrentUmbracoPage();
+            return Json(new
+            {
+                success = true,
+                redirectUrl = url
+            });
 
         }
 
