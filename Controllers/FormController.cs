@@ -94,19 +94,8 @@ namespace vyaauma.Controllers
 
             _formService.SendBrevoTemplateEmail(firstName, lastName, email, formInfoType);
 
-            var fullName = firstName + lastName;
-
-            var template = _configuration["Umbraco:CMS:EmailTemplates:ContactInquiry"];
-
-            template = ReplaceOrRemove(template, "FormInfo", "Form Info", formInfo);
-            template = ReplaceOrRemove(template, "FullName", "Full Name", fullName);
-            template = ReplaceOrRemove(template, "ApplyIn", "Interested In", appylIn);
-            template = ReplaceOrRemove(template, "Email", "Email", email);
-            template = ReplaceOrRemove(template, "ContactNumber", "Contact Number", contactNumber);
-            template = ReplaceOrRemove(template, "Message", "Message", message);
-
             // Send email
-            _formService.SendEmail(template);
+            _formService.SendBrevoTemplateEmailToAdmin(firstName, lastName, email, contactNumber, message, appylIn, formInfoType);
 
 
             return Json(new

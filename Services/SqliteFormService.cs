@@ -27,7 +27,15 @@ namespace vyaauma.Services
         void SendBrevoTemplateEmail(
            string firstName, string lastName, string email, string formInfoType
         );
-        void SendEmail(string mailBody);
+        void SendBrevoTemplateEmailToAdmin(
+            string firstName,
+            string lastName,
+            string email,
+            string contactNumber,
+            string message,
+            string applyIn,
+            string formInfoType
+        );
     }
 
     public class SqliteFormService : ISqliteFormService
@@ -89,10 +97,10 @@ namespace vyaauma.Services
 
             var apiKey = settings.Value<string>("smtpAPIKey");
             var userReciverEmail = email;
-            var senderEmail =  settings.Value<string>("senderEmail");
+            var senderEmail = settings.Value<string>("senderEmail");
             var fromName = settings.Value<string>("fromName");
             var fullName = firstName + lastName;
-            var templateId = settings.Value<string>("tempId");
+            var templateId = 1;
 
             Dictionary<string, object> templateParams = new Dictionary<string, object>
                {
@@ -147,43 +155,83 @@ namespace vyaauma.Services
             }
         }
 
-        public void SendEmail(string mailBody)
+
+        public void SendBrevoTemplateEmailToAdmin(
+                             string firstName,
+                            string lastName,
+                            string email,
+                            string contactNumber,
+                            string message,
+                            string applyIn,
+                            string formInfoType
+                                        )
         {
             var settings = GetEmailSettings();
-            if (settings == null)
-                return;
+            if (settings == null) return;
 
-            //  FETCH DATA FROM ADMIN HERE
-            var host = settings.Value<string>("smtpHost");
-            var port = settings.Value<int>("smtpPort");
-            var enableSsl = settings.Value<bool>("enableSsl");
-            var userName = settings.Value<string>("smtpUsername");
-            var password = settings.Value<string>("smtpKey");
-
+            var apiKey = settings.Value<string>("smtpAPIKey");
+            var adminEmail = settings.Value<string>("adminEmail");
             var senderEmail = settings.Value<string>("senderEmail");
-
-            var adminToEmail =  settings.Value<string>("senderEmail");
-
             var fromName = settings.Value<string>("fromName");
-            var subject = settings.Value<string>("emailSubject");
+            var fullName = firstName + lastName;
+            var templateId = 2;
 
-            using var client = new SmtpClient(host, port)
+            Dictionary<string, object> templateParams = new Dictionary<string, object>
+               {
+                     { "FormInfo", formInfoType },
+                     { "FirstName", firstName },
+                     { "LastName", lastName },
+                     { "Email", email },
+                     { "ContactNumber", contactNumber },
+                     { "ApplyIn", applyIn },
+                     { "Message", message }
+               };
+
+
+            var payload = new
             {
-                Credentials = new NetworkCredential(userName, password),
-                EnableSsl = enableSsl
+                to = new[]
+                {
+            new { email = adminEmail, name = fullName }
+        },
+                sender = new
+                {
+                    email = senderEmail,
+                    name = fromName
+                },
+                templateId = templateId,
+                @params = templateParams,
+                replyTo = new
+                {
+                    email = email,
+                    name = fullName
+                }
             };
 
-            var mail = new MailMessage
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json")
+            );
+
+            var json = JsonSerializer.Serialize(payload);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = client.PostAsync(
+                "https://api.brevo.com/v3/smtp/email",
+                content
+            ).Result;
+
+            if (!response.IsSuccessStatusCode)
             {
-                From = new MailAddress(senderEmail, fromName),
-                Subject = subject,
-                Body = mailBody,
-                IsBodyHtml = true
-            };
+                var error = response.Content.ReadAsStringAsync();
 
-            mail.To.Add(adminToEmail);
+                // Log error (choose one)
+                Console.WriteLine("Brevo email failed: " + error);
+                // _logger.LogError("Brevo email failed: {Error}", error);
 
-            client.Send(mail);
+                return;
+            }
         }
     }
 }

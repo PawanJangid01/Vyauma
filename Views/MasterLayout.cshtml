@@ -85,30 +85,27 @@ var noIndex = seoBlock?.Value<bool>("noIndexNoFollow") ?? false;
   {
   <link href="@faviconIcon.Url()?"  rel="icon">
   }
-  @* <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon"> *@
 
   <!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@400;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+</noscript>
 
   <!-- Vendor CSS Files -->
-  <link href="~/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="~/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="~/assets/vendor/aos/aos.css" rel="stylesheet">
-  <link href="~/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-  <link href="~/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <link href="~/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" asp-append-version="true">
+<link href="~/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" asp-append-version="true">
+<link href="~/vendor/aos/aos.css" rel="stylesheet" asp-append-version="true">
+<link href="~/vendor/glightbox/css/glightbox.min.css" rel="stylesheet" asp-append-version="true">
+<link href="~/vendor/swiper/swiper-bundle.min.css" rel="stylesheet" asp-append-version="true">
 
   <!-- Main CSS File -->
-  <link href="~/assets/css/style.css" rel="stylesheet">
+  <link rel="stylesheet" href="~/css/style.css" asp-append-version="true"/>
 
-  <!-- =======================================================
-  * Template Name: Nova
-  * Template URL: https://bootstrapmade.com/nova-bootstrap-business-template/
-  * Updated: Aug 07 2024 with Bootstrap v5.3.3
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
 </head>
 
 <body class="index-page">
@@ -118,7 +115,7 @@ var noIndex = seoBlock?.Value<bool>("noIndexNoFollow") ?? false;
         @if(headerLogo != null)
         {
       <a href="/" class="logo d-flex align-items-center">       
-        <img src="@headerLogo.Url()" alt="">
+        <img src="@headerLogo.Url()" alt="logo" loading="lazy">
       </a>
         }
 
@@ -168,7 +165,7 @@ var noIndex = seoBlock?.Value<bool>("noIndexNoFollow") ?? false;
               @if(footerLogo != null)
               {
             <a href="#" class="logo d-flex align-items-center">              
-              <img src="@footerLogo.Url()" alt="" >
+              <img src="@footerLogo.Url()" alt="footerlog" loading="lazy" >
             </a>
               }
             @Html.Raw(footerDescription.ToString().Replace("<p>", "").Replace("</p>", "")) 
@@ -208,16 +205,15 @@ var noIndex = seoBlock?.Value<bool>("noIndexNoFollow") ?? false;
   <div id="preloader"></div>
 
   <!-- Vendor JS Files -->
-  <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="~/assets/vendor/php-email-form/validate.js"></script>
-  <script src="~/assets/vendor/aos/aos.js"></script>
-  <script src="~/assets/vendor/glightbox/js/glightbox.min.js"></script>
-  <script src="~/assets/vendor/swiper/swiper-bundle.min.js"></script>
-  <script src="~/assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
-  <script src="~/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+ <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+<script src="~/vendor/aos/aos.js" defer></script>
+<script src="~/vendor/glightbox/js/glightbox.min.js" defer></script>
+<script src="~/vendor/swiper/swiper-bundle.min.js" defer></script>
+<script src="~/vendor/imagesloaded/imagesloaded.pkgd.min.js" defer></script>
+<script src="~/vendor/isotope-layout/isotope.pkgd.min.js" defer></script>
 
   <!-- Main JS File -->
-  <script src="~/assets/scripts/main.js"></script>
+  <script src="~/scripts/main.js" asp-append-version="true" defer></script>
 
 </body>
 

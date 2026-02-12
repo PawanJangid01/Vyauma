@@ -61,7 +61,7 @@
           <div class="col-lg-5">
               @if(philosophyImage != null)
               {
-            <img src="@philosophyImage.Url()" class="img-fluid" alt="">
+            <img src="@philosophyImage.Url()" class="img-fluid" alt="philosohy" loading="lazy">
               }
           </div>
           <div class="col-lg-7" data-aos="fade-up" data-aos-delay="200">
@@ -100,7 +100,7 @@
           <div class="card-bg">
               @if(image != null)
               {
-            <img src="@image.Url()" alt="">
+            <img src="@image.Url()" alt="image" loading="lazy">
               }
           </div>
           <div class="card-body text-center">
@@ -150,7 +150,7 @@
                         <div class="career-card">
                             @if (image != null)
                             {
-                                <img src="@image.Url()" class="img-fluid" alt="@heading" />
+                                <img src="@image.Url()" class="img-fluid" alt="@heading" loading="lazy" />
                             }
                         </div>
                     </div>

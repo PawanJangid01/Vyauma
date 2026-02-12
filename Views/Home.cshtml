@@ -48,16 +48,13 @@
 
       ViewData["FormType"] = "Career"; 
 }
-
-<style>
-
-</style> 
+ 
 
     <!-- Hero Section -->
     <section id="hero" class="hero section dark-background">
         @if(heroImage != null)
         {
-        <img src="@heroImage.Url()" alt="" data-aos="fade-in">
+        <img src="@heroImage.Url()" alt="heroImage" data-aos="fade-in" loading="lazy">
          }
       <div class="container">
         <div class="row">
@@ -92,7 +89,7 @@
           <div class="col-lg-5 ">
               @if(previewImage != null)
               {
-            <img src="@previewImage.Url()" width="100%" alt="">
+            <img src="@previewImage.Url()" width="100%" alt="previewimage" loading="lazy">
               }
           </div>
 
@@ -197,7 +194,7 @@
             <div class="phone-wrap">
                 @if(sideBannerImage != null)
                 {
-              <img src="@sideBannerImage.Url()" alt="Image" class="img-fluid">
+              <img src="@sideBannerImage.Url()" alt="Image" class="img-fluid" loading="lazy">
                 }
             </div>
           </div>
@@ -249,167 +246,3 @@
         }
     </div>
 </div>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-
-    const modal = document.getElementById("getStartedModal");
-    const openBtn = document.getElementById("openGetStarted");
-    const closeBtn = modal.querySelector(".close-modal");
-
-    if (!modal || !openBtn) return;
-
-    // Open modal (slow motion)
-    openBtn.addEventListener("click", function (e) {
-        e.preventDefault();
-        modal.classList.add("show");
-        document.body.style.overflow = "hidden"; // prevent background scroll
-    });
-
-    // Close modal
-    function closeModal() {
-        modal.classList.remove("show");
-        document.body.style.overflow = "";
-    }
-
-    closeBtn.addEventListener("click", closeModal);
-
-    // Close when clicking outside
-    modal.addEventListener("click", function (e) {
-        if (e.target === modal) {
-            closeModal();
-        }
-    });
-
-    // ESC key close
-    document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape" && modal.classList.contains("show")) {
-            closeModal();
-        }
-    });
-
-});
-</script>
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-
-    const form = document.getElementById("popupForm");
-    if (!form) return;
-
-    const serverError = document.getElementById("popupServerError");
-
-    const fields = {
-        firstName: {
-            el: document.getElementById("p_firstName"),
-            message: "First name is required"
-        },
-        lastName: {
-            el: document.getElementById("p_lastName"),
-            message: "Last name is required"
-        },
-        email: {
-            el: document.getElementById("p_email"),
-            message: "Enter a valid email address",
-            regex: /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/
-        },
-        contactNumber: {
-            el: document.getElementById("p_contactNumber"),
-            message: "Enter a valid 10-digit contact number",
-            regex: /^\d{10}$/
-        },
-        message: {
-            el: document.getElementById("p_message"),
-            message: "Message is required"
-        }
-    };
-
-    function showError(field, msg) {
-        clearError(field);
-        field.classList.add("is-invalid");
-
-        const error = document.createElement("div");
-        error.className = "error-text";
-        error.innerText = msg;
-
-        field.closest(".col-md-6, .col-md-12").appendChild(error);
-    }
-
-    function clearError(field) {
-        field.classList.remove("is-invalid");
-
-        const container = field.closest(".col-md-6, .col-md-12");
-        const err = container.querySelector(".error-text");
-        if (err) err.remove();
-    }
-
-    function validateForm() {
-        let isValid = true;
-
-        Object.values(fields).forEach(f => {
-            const value = f.el.value.trim();
-            clearError(f.el);
-
-            if (!value) {
-                showError(f.el, f.message);
-                isValid = false;
-            }
-            else if (f.regex && !f.regex.test(value)) {
-                showError(f.el, f.message);
-                isValid = false;
-            }
-        });
-
-        return isValid;
-    }
-
-    // Only numbers, max 10 digits
-    fields.contactNumber.el.addEventListener("input", function () {
-        this.value = this.value.replace(/\D/g, "").slice(0, 10);
-        clearError(this);
-    });
-
-    // Clear error while typing
-    Object.values(fields).forEach(f => {
-        f.el.addEventListener("input", () => clearError(f.el));
-    });
-
-form.addEventListener("submit", function (e) {
-    e.preventDefault();
-
-    serverError.style.display = "none";
-    serverError.innerText = "";
-
-    if (!validateForm()) return;
-
-    const btn = form.querySelector("button[type='submit']");
-    btn.disabled = true;
-    btn.innerText = "Sending...";
-
-    fetch(form.action, {
-        method: "POST",
-        body: new FormData(form),
-        headers: { "X-Requested-With": "XMLHttpRequest" }
-    })
-    .then(res => res.json())
-    .then(res => {
-        if (res.success) {
-            form.reset();                 // optional
-            window.location.href = res.redirectUrl; // ✅ THANK YOU PAGE
-        } else {
-            serverError.innerText = res.message;
-            serverError.style.display = "block";
-            btn.disabled = false;
-            btn.innerText = "Submit";
-        }
-    })
-    .catch(() => {
-        serverError.innerText = "Something went wrong";
-        serverError.style.display = "block";
-        btn.disabled = false;
-        btn.innerText = "Submit";
-    });
-});
-
-
-});
-</script>
